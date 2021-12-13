@@ -13,6 +13,10 @@ const App: React.VFC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   // 追加前のタスクを格納する
   const [newTaskLabel, setNewTaskLabel] = useState<string>("");
+  // 編集中のタスクのindexを格納する
+  const [editingLabelIndex, setEditingLabelIndex] = useState<number | null>(
+    null
+  );
 
   // ページマウント時にモックAPIからデータを取得
   useEffect(() => {
@@ -28,10 +32,27 @@ const App: React.VFC = () => {
       <h2>React Todo List</h2>
 
       {/* 一覧表示 */}
-      <TaskList {...{ tasks, setTasks }} />
+      <TaskList
+        {...{
+          tasks,
+          setTasks,
+          editingLabelIndex,
+          setEditingLabelIndex,
+          setNewTaskLabel,
+        }}
+      />
 
       {/* タスク追加、削除 */}
-      <TaskForm {...{ tasks, setTasks, newTaskLabel, setNewTaskLabel }} />
+      <TaskForm
+        {...{
+          tasks,
+          setTasks,
+          newTaskLabel,
+          setNewTaskLabel,
+          editingLabelIndex,
+          setEditingLabelIndex,
+        }}
+      />
     </div>
   );
 };

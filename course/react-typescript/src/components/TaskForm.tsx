@@ -6,6 +6,8 @@ type Props = {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   newTaskLabel: string;
   setNewTaskLabel: React.Dispatch<React.SetStateAction<string>>;
+  editingLabelIndex: number | null;
+  setEditingLabelIndex: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 export const TaskForm: React.FC<Props> = ({
@@ -13,6 +15,8 @@ export const TaskForm: React.FC<Props> = ({
   setTasks,
   newTaskLabel,
   setNewTaskLabel,
+  editingLabelIndex,
+  setEditingLabelIndex,
 }) => {
   // フォームの値を保持する
   const handleNewTaskLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,10 +30,22 @@ export const TaskForm: React.FC<Props> = ({
     setNewTaskLabel("");
   };
 
+  // 修正したTaskの登録
+  const handleEditTask = () => {
+    const newEditTasks = tasks.map((task, _i) => {
+      return _i === editingLabelIndex ? { ...task, label: newTaskLabel } : task;
+    });
+    setTasks(newEditTasks);
+    setNewTaskLabel("");
+    setEditingLabelIndex(null);
+  };
+
   // 完了したTaskを削除する
   const handleClearTasks = () => {
     const newTasks = tasks.filter((task) => !task.isDone);
     setTasks(newTasks);
+    setNewTaskLabel("");
+    setEditingLabelIndex(null);
   };
 
   return (
@@ -40,7 +56,12 @@ export const TaskForm: React.FC<Props> = ({
         value={newTaskLabel}
         placeholder="Enter the task"
       />
-      <button onClick={handleAddTask}>Add</button>
+      {editingLabelIndex === null ? (
+        <button onClick={handleAddTask}>Add</button>
+      ) : (
+        <button onClick={handleEditTask}>Edit</button>
+      )}
+
       <br />
       <button onClick={handleClearTasks}>Clear</button>
     </>
